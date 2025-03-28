@@ -1,11 +1,16 @@
 import { FlatCompat } from "@eslint/eslintrc";
 import tseslint from "typescript-eslint";
+import stylisticTs from "@stylistic/eslint-plugin";
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
 });
 
 export default tseslint.config(
+  stylisticTs.configs.customize({
+    quotes: "double",
+    semi: true,
+  }),
   {
     ignores: [".next"],
   },
@@ -22,7 +27,10 @@ export default tseslint.config(
       "@typescript-eslint/consistent-type-definitions": "off",
       "@typescript-eslint/consistent-type-imports": [
         "warn",
-        { prefer: "type-imports", fixStyle: "inline-type-imports" },
+        {
+          prefer: "type-imports",
+          fixStyle: "inline-type-imports",
+        },
       ],
       "@typescript-eslint/no-unused-vars": [
         "warn",
