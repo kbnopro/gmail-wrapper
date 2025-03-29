@@ -1,7 +1,8 @@
 import { FlatCompat } from "@eslint/eslintrc";
-import tseslint from "typescript-eslint";
 import stylisticTs from "@stylistic/eslint-plugin";
+import importSort from "eslint-plugin-simple-import-sort";
 import tailwind from "eslint-plugin-tailwindcss";
+import tseslint from "typescript-eslint";
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
@@ -13,6 +14,15 @@ export default tseslint.config(
     quotes: "double",
     semi: true,
   }),
+  {
+    plugins: {
+      "simple-import-sort": importSort,
+    },
+    rules: {
+      "simple-import-sort/imports": "warn",
+      "simple-import-sort/exports": "warn",
+    },
+  },
   {
     ignores: [".next"],
   },
