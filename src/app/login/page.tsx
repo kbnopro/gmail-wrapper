@@ -26,7 +26,7 @@ const Page = async () => {
               }}
             >
               <button
-                className="rounded-full bg-white/10 px-4 py-3 font-semibold no-underline cursor-pointer transition hover:bg-white/20"
+                className="cursor-pointer rounded-full bg-white/10 px-4 py-3 font-semibold no-underline transition hover:bg-white/20"
                 type="submit"
               >
                 <div className="flex items-center justify-center gap-3">
