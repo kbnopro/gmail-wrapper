@@ -1,7 +1,7 @@
 import { FlatCompat } from "@eslint/eslintrc";
 import stylisticTs from "@stylistic/eslint-plugin";
+import eslintConfigPrettier from "eslint-config-prettier";
 import importSort from "eslint-plugin-simple-import-sort";
-import tailwind from "eslint-plugin-tailwindcss";
 import tseslint from "typescript-eslint";
 
 const compat = new FlatCompat({
@@ -9,7 +9,6 @@ const compat = new FlatCompat({
 });
 
 export default tseslint.config(
-  tailwind.configs["flat/recommended"],
   stylisticTs.configs.customize({
     quotes: "double",
     semi: true,
@@ -65,4 +64,5 @@ export default tseslint.config(
       },
     },
   },
+  eslintConfigPrettier,
 );
