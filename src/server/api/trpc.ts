@@ -12,7 +12,6 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { auth } from "@/server/auth";
-import { db } from "@/server/db";
 
 /**
  * 1. CONTEXT
@@ -30,7 +29,6 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await auth();
 
   return {
-    db,
     session,
     ...opts,
   };
@@ -90,7 +88,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   if (t._config.isDev) {
     // artificial delay in dev
     const waitMs = Math.floor(Math.random() * 400) + 100;
-    await new Promise(resolve => setTimeout(resolve, waitMs));
+    await new Promise((resolve) => setTimeout(resolve, waitMs));
   }
 
   const result = await next();
