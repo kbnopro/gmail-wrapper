@@ -1,8 +1,10 @@
-# T3 Stack Boilerplate
+# Gmail Wrapper task
 
-This is my boilerplate using T3 Stack.
+My training product for Lyra.
 
-This repository contains heavily opinionated configurations and preferences.
+## T3 Stack Boilerplate
+
+This is a project created using my [T3 stack boilerplate](https://github.com/kbnopro/T3-Boilerplate).
 
 ## Create T3 App
 
