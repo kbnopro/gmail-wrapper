@@ -1,5 +1,5 @@
-import { env } from "@env";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { env } from "@env";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
