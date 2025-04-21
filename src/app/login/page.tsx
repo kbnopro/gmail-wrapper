@@ -13,9 +13,7 @@ const Page = async () => {
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-900 to-blue-950 text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
         <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          App name by
-          {" "}
-          <span className="text-sky-500">Name</span>
+          Gmail Wrapper by <span className="text-sky-500">KB</span>
         </h1>
         <div className="flex flex-col items-center gap-2">
           <div className="flex flex-col items-center justify-center gap-4">
@@ -31,9 +29,7 @@ const Page = async () => {
               >
                 <div className="flex items-center justify-center gap-3">
                   <GoogleIcon width={32} height={32} />
-                  <div className="h-fit">
-                    Sign in with Google
-                  </div>
+                  <div className="h-fit">Sign in with Google</div>
                 </div>
               </button>
             </form>

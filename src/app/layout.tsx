@@ -6,12 +6,14 @@ import { Geist } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
 
 export const metadata: Metadata = {
-  title: "App Name",
-  description: "App description",
-  icons: [{
-    rel: "icon",
-    url: "/favicon.ico",
-  }],
+  title: "Gmail Wrapper",
+  description: "Gmail Wrapper for Lyra Training",
+  icons: [
+    {
+      rel: "icon",
+      url: "/favicon.ico",
+    },
+  ],
 };
 
 const geist = Geist({
