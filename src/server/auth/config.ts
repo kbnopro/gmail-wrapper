@@ -4,6 +4,7 @@ import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 import { getUserToken } from "@/features/emails/utils/getUserToken";
+import { syncMessages } from "@/features/emails/utils/syncMessages";
 import { db } from "@/server/db";
 
 /**
@@ -57,6 +58,14 @@ export const authConfig = {
      */
   ],
   adapter: PrismaAdapter(db),
+  events: {
+    async linkAccount(message) {
+      if (!message.user.id) {
+        return;
+      }
+      void syncMessages(message.user.id);
+    },
+  },
   callbacks: {
     session: async ({ session, user }) => {
       session = {

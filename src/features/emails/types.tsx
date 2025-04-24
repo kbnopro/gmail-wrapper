@@ -1,3 +1,5 @@
+import { type db } from "@/server/db";
+
 interface MessageHeader {
   name: string;
   value: string;
@@ -29,3 +31,5 @@ export interface MessageList {
   nextPageToken?: string;
   resultSizeEstimate: number;
 }
+
+export type Thread = Awaited<ReturnType<typeof db.threadList.findMany>>[number];

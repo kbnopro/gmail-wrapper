@@ -3,13 +3,20 @@ import { redirect } from "next/navigation";
 import { AccountButton } from "@/components/AccountButton";
 import { RefreshTokenError } from "@/features/emails/components/RefreshTokenError";
 import { SearchBar } from "@/features/emails/components/SearchBar";
+import { ThreadsTable } from "@/features/emails/components/ThreadTable";
 import { TopEmailBar } from "@/features/emails/components/TopEmailBar";
 import { auth } from "@/server/auth";
 
-const Page = async () => {
+const Page = async ({ params }: { params: Promise<{ page: string }> }) => {
   const session = await auth();
   if (!session) redirect("/login");
   const refreshTokenError = session.error === "RefreshTokenError";
+
+  const { page } = await params;
+  const pageInt = parseInt(page);
+  if (isNaN(pageInt)) {
+    throw new Error("Invalid page");
+  }
 
   return (
     <div className="flex h-screen max-h-screen w-full flex-col">
@@ -21,7 +28,8 @@ const Page = async () => {
       </div>
       <div className="h-full w-full overflow-hidden rounded-2xl bg-white">
         {refreshTokenError && <RefreshTokenError />}
-        <TopEmailBar />
+        <TopEmailBar page={pageInt} />
+        <ThreadsTable page={pageInt} />
       </div>
     </div>
   );

@@ -1,9 +1,12 @@
 import type { Message } from "../types";
 
-export const getGoogleMessages = async (
-  token: string,
-  messagesId: string[],
-) => {
+export const getGoogleMessages = async ({
+  token,
+  messagesId,
+}: {
+  token: string;
+  messagesId: string[];
+}) => {
   const boundary = "batch_boundary";
 
   const body = messagesId

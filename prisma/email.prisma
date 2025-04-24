@@ -4,9 +4,9 @@ model Message {
   subject      String
   snippet      String
   threadId     String
-  messageParts MessagePart[]
   ownerId      String
   owner        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  messageParts MessagePart[]
 
   @@index([threadId])
 }
