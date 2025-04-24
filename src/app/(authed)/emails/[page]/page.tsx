@@ -6,17 +6,18 @@ import { SearchBar } from "@/features/emails/components/SearchBar";
 import { ThreadsTable } from "@/features/emails/components/ThreadTable";
 import { TopEmailBar } from "@/features/emails/components/TopEmailBar";
 import { auth } from "@/server/auth";
+import { api, HydrateClient } from "@/trpc/server";
 
 const Page = async ({ params }: { params: Promise<{ page: string }> }) => {
   const session = await auth();
+  const { page } = await params;
   if (!session) redirect("/login");
   const refreshTokenError = session.error === "RefreshTokenError";
-
-  const { page } = await params;
   const pageInt = parseInt(page);
   if (isNaN(pageInt)) {
     throw new Error("Invalid page");
   }
+  void api.thread.getList.prefetch({ page: pageInt });
 
   return (
     <div className="flex h-screen max-h-screen w-full flex-col">
@@ -26,10 +27,12 @@ const Page = async ({ params }: { params: Promise<{ page: string }> }) => {
           <AccountButton />
         </div>
       </div>
-      <div className="h-full w-full overflow-hidden rounded-2xl bg-white">
+      <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white">
         {refreshTokenError && <RefreshTokenError />}
         <TopEmailBar page={pageInt} />
-        <ThreadsTable page={pageInt} />
+        <HydrateClient>
+          <ThreadsTable page={pageInt} />
+        </HydrateClient>
       </div>
     </div>
   );
