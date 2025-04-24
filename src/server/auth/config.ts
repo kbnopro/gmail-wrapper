@@ -3,6 +3,7 @@ import { env } from "@env";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
+import { getUserToken } from "@/features/emails/utils/getUserToken";
 import { db } from "@/server/db";
 
 /**
@@ -13,6 +14,7 @@ import { db } from "@/server/db";
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
+    error?: string;
     user: {
       id: string;
       // ...other properties
@@ -36,6 +38,13 @@ export const authConfig = {
     GoogleProvider({
       clientId: env.AUTH_GOOGLE_ID,
       clientSecret: env.AUTH_GOOGLE_SECRET,
+      authorization: {
+        params: {
+          scope:
+            "openid email profile https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send",
+          access_type: "offline",
+        },
+      },
     }),
     /**
      * ...add more providers here.
@@ -49,12 +58,46 @@ export const authConfig = {
   ],
   adapter: PrismaAdapter(db),
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: async ({ session, user }) => {
+      session = {
+        ...session,
+        user: {
+          ...session.user,
+          id: user.id,
+        },
+      };
+      if (!(await getUserToken(user.id))) {
+        session.error = "RefreshTokenError";
+      }
+      return session;
+    },
+    signIn: async ({ account }) => {
+      if (!account) {
+        return false;
+      }
+      const googleAccount = await db.account.findFirst({
+        where: {
+          provider: "google",
+          providerAccountId: account?.providerAccountId,
+        },
+      });
+      if (!googleAccount) {
+        return true;
+      }
+      await db.account.update({
+        where: {
+          provider_providerAccountId: {
+            provider: "google",
+            providerAccountId: account?.providerAccountId,
+          },
+        },
+        data: {
+          access_token: account.access_token,
+          refresh_token: account.refresh_token,
+          expires_at: account.expires_at,
+        },
+      });
+      return true;
+    },
   },
 } satisfies NextAuthConfig;

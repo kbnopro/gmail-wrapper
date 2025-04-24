@@ -1,0 +1,18 @@
+model Message {
+  id           String        @id @default(cuid())
+  internalDate DateTime
+  subject      String
+  snippet      String
+  threadId     String
+  messageParts MessagePart[]
+  ownerId      String
+  owner        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([threadId])
+}
+
+model MessagePart {
+  id        String  @id @default(cuid())
+  messageId String
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}

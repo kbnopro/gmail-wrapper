@@ -34,6 +34,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  message       Message[]
 }
 
 model VerificationToken {
