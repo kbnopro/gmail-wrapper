@@ -9,11 +9,15 @@ export const getThreadList = async ({
 }) => {
   const limit = 50;
   const offset = (page - 1) * 50;
-  return db.threadList.findMany({
+  const data = await db.threadList.findMany({
     where: {
       ownerId: userId,
     },
     take: limit,
     skip: offset,
+    orderBy: {
+      internalDate: "desc",
+    },
   });
+  return data;
 };

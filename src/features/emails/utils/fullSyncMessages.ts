@@ -3,11 +3,12 @@ import { db } from "@/server/db";
 import { getGoogleMessageList } from "../api/getGoogleMessageList";
 import { getGoogleMessages } from "../api/getGoogleMessages";
 import { getUserToken } from "./getUserToken";
+import { saveMessages } from "./saveMessages";
 
 export const fullSyncMessages = async (userId: string) => {
-  // Perform a full sync
   const token = await getUserToken(userId);
   if (!token) {
+    // TODO: Handle error token
     return;
   }
 
@@ -31,20 +32,18 @@ export const fullSyncMessages = async (userId: string) => {
       messagesId: messageList.messages.map(({ id }) => id),
     });
 
-    await db.message.createMany({
-      data: messages.map((message) => {
-        return {
-          internalDate: new Date(parseInt(message.internalDate)),
-          subject:
-            message.payload.headers.find(({ name }) => name == "Subject")
-              ?.value ?? "",
-          snippet: message.snippet,
-          threadId: message.threadId,
-          ownerId: userId,
-        };
-      }),
-      skipDuplicates: true,
-    });
+    await saveMessages({ messages, userId });
+
+    if (!curToken) {
+      await db.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          latestHistoryId: messages[0]?.historyId ?? null,
+        },
+      });
+    }
 
     if (!messageList.nextPageToken) {
       break;

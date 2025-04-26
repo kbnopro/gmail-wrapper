@@ -1,8 +1,8 @@
 view ThreadList {
-  id           String   @id
   threadId     String
   internalDate DateTime
   subject      String
   snippet      String
   ownerId      String
+  id           String   @id
 }

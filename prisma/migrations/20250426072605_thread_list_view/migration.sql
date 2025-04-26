@@ -1,4 +1,4 @@
-SELECT
+CREATE OR REPLACE VIEW "ThreadList" AS SELECT
   "threadId",
   "internalDate",
   subject,

@@ -17,10 +17,10 @@ const Page = async ({ params }: { params: Promise<{ page: string }> }) => {
   if (isNaN(pageInt)) {
     throw new Error("Invalid page");
   }
-  void api.thread.getList.prefetch({ page: pageInt });
+  void api.message.getList.prefetch({ page: pageInt });
 
   return (
-    <div className="flex h-screen max-h-screen w-full flex-col">
+    <div className="flex h-screen max-h-screen w-0 grow flex-col">
       <div className="flex h-16 w-full shrink-0 items-center">
         <SearchBar />
         <div className="flex grow justify-end px-2 md:px-4">

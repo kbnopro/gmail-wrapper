@@ -32,4 +32,18 @@ export interface MessageList {
   resultSizeEstimate: number;
 }
 
-export type Thread = Awaited<ReturnType<typeof db.threadList.findMany>>[number];
+export type Thread = Awaited<ReturnType<typeof db.message.findMany>>[number];
+
+export interface HistoryList {
+  historyId: string;
+  nextPageToken?: string;
+  history?: {
+    id: string;
+    messagesAdded?: {
+      message: Message;
+    }[];
+    messagesDeleted?: {
+      message: Message;
+    }[];
+  }[];
+}

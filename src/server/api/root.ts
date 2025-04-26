@@ -1,4 +1,4 @@
-import { threadRouter } from "@/features/emails/routers/threadRouter";
+import { messageRouter } from "@/features/emails/routers/messageRouter";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 /**
@@ -7,7 +7,7 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  thread: threadRouter,
+  message: messageRouter,
 });
 
 // export type definition of API

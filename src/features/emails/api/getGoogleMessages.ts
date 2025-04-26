@@ -1,4 +1,5 @@
 import type { Message } from "../types";
+import { getGoogleMessage } from "./getGooogleMessage";
 
 export const getGoogleMessages = async ({
   token,
@@ -8,6 +9,10 @@ export const getGoogleMessages = async ({
   messagesId: string[];
 }) => {
   const boundary = "batch_boundary";
+
+  if (messagesId.length == 1) {
+    return [await getGoogleMessage({ token, messageId: messagesId[0]! })];
+  }
 
   const body = messagesId
     .flatMap((id, idx) => {
@@ -22,6 +27,7 @@ export const getGoogleMessages = async ({
         `Content_ID: <item${idx + 1}>`,
         "",
         `GET ${url.href}`,
+        "",
       ];
     })
     .concat([`--${boundary}`])
@@ -46,6 +52,7 @@ export const getGoogleMessages = async ({
     throw new Error("Cannot get response boundary");
   }
 
+  console.log(body);
   if (!res.ok) {
     console.error(await res.json());
     throw new Error("Failed to fetch messages");

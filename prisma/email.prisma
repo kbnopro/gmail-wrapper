@@ -1,5 +1,5 @@
 model Message {
-  id           String        @id @default(cuid())
+  id           String        @id
   internalDate DateTime
   subject      String
   snippet      String
