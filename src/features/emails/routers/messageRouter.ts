@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
-import { getThreadList } from "../queries/getThreadList";
+import { getThreadList } from "../utils/getThreadList";
 import { syncMessages } from "../utils/syncMessages";
 
 export const messageRouter = createTRPCRouter({

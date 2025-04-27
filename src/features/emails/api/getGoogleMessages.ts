@@ -1,5 +1,4 @@
 import type { Message } from "../types";
-import { getGoogleMessage } from "./getGooogleMessage";
 
 export const getGoogleMessages = async ({
   token,
@@ -9,10 +8,6 @@ export const getGoogleMessages = async ({
   messagesId: string[];
 }) => {
   const boundary = "batch_boundary";
-
-  if (messagesId.length == 1) {
-    return [await getGoogleMessage({ token, messageId: messagesId[0]! })];
-  }
 
   const body = messagesId
     .flatMap((id, idx) => {
@@ -30,7 +25,7 @@ export const getGoogleMessages = async ({
         "",
       ];
     })
-    .concat([`--${boundary}`])
+    .concat([`--${boundary}--`])
     .join("\r\n");
 
   const res = await fetch("https://gmail.googleapis.com/batch/gmail/v1", {
