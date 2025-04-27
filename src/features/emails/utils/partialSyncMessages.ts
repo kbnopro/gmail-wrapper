@@ -12,7 +12,6 @@ export const partialSyncMessages = async ({
   userId: string;
   latestHistoryId: string;
 }) => {
-  console.log("Partial Sync");
   const token = await getUserToken(userId);
   if (!token) {
     // TODO: Handle error token
@@ -37,18 +36,13 @@ export const partialSyncMessages = async ({
     await Promise.all(
       histories.history.map(async (historyRecord) => {
         if (!!historyRecord.messagesAdded) {
-          try {
-            // Error cause by added then deleted message
-            // TODO: Optimize this by not adding the already deleted message
-            // Or just leave it like that
-            const messages = await getGoogleMessages({
-              token,
-              messagesId: historyRecord.messagesAdded.map(
-                ({ message }) => message.id,
-              ),
-            });
-            await saveMessages({ messages, userId });
-          } catch {}
+          const messages = await getGoogleMessages({
+            token,
+            messagesId: historyRecord.messagesAdded.map(
+              ({ message }) => message.id,
+            ),
+          });
+          await saveMessages({ messages, userId });
         }
 
         if (!!historyRecord.messagesDeleted) {

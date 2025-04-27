@@ -1,3 +1,4 @@
+import { MAX_THREAD_PER_PAGE } from "@/config";
 import { db } from "@/server/db";
 
 export const getThreadList = async ({
@@ -7,8 +8,8 @@ export const getThreadList = async ({
   userId: string;
   page: number;
 }) => {
-  const limit = 50;
-  const offset = (page - 1) * 50;
+  const limit = MAX_THREAD_PER_PAGE;
+  const offset = (page - 1) * limit;
   const data = await db.threadList.findMany({
     where: {
       ownerId: userId,

@@ -1,13 +1,11 @@
 "use client";
 
-import { api } from "@/trpc/react";
+import { useThreadList } from "@/features/emails/hooks/useThreadList";
 
 import { ThreadRow } from "./ThreadRow";
 
 export const ThreadsTable = ({ page }: { page: number }) => {
-  const [threadsList, threadsListQuery] = api.message.getList.useSuspenseQuery({
-    page,
-  });
+  const [threadsList, threadsListQuery] = useThreadList(page);
   // TODO: Handle loading and error state
   if (threadsListQuery.isLoading) {
     return <></>;

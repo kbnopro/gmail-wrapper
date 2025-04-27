@@ -11,7 +11,10 @@ export const ThreadRow = ({
   const now = new Date(Date.now());
   const displayedDate = () => {
     if (date.getFullYear() == now.getFullYear()) {
-      if (date.getMonth() == now.getMonth() && date.getDay() == now.getDay()) {
+      if (
+        date.getMonth() == now.getMonth() &&
+        date.getDate() == now.getDate()
+      ) {
         return ShortTime.format(date);
       }
       return MediumDate.format(date).split(",")[0];

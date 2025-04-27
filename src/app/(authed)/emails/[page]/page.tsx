@@ -17,7 +17,8 @@ const Page = async ({ params }: { params: Promise<{ page: string }> }) => {
   if (isNaN(pageInt)) {
     throw new Error("Invalid page");
   }
-  void api.message.getList.prefetch({ page: pageInt });
+  await api.thread.getList.prefetch({ page: pageInt });
+  await api.thread.count.prefetch();
 
   return (
     <div className="flex h-screen max-h-screen w-0 grow flex-col">
@@ -29,8 +30,8 @@ const Page = async ({ params }: { params: Promise<{ page: string }> }) => {
       </div>
       <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white">
         {refreshTokenError && <RefreshTokenError />}
-        <TopEmailBar page={pageInt} />
         <HydrateClient>
+          <TopEmailBar page={pageInt} />
           <ThreadsTable page={pageInt} />
         </HydrateClient>
       </div>
