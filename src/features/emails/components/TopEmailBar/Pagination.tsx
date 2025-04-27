@@ -1,12 +1,23 @@
+"use client";
+
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import Link from "next/link";
 
+import { useThreadCount } from "../../hooks/useThreadCount";
 import { MailCounter } from "./MailCounter";
 
-export const Pagination = async ({ page }: { page: number }) => {
+export const Pagination = ({ page }: { page: number }) => {
+  const [threadCount, threadCountQuery] = useThreadCount();
+  if (threadCountQuery.isLoading) {
+    return <></>;
+  }
+  if (threadCountQuery.isError) {
+    return <></>;
+  }
+
   const hasPrevPage = page != 1;
-  const hasNextPage = true;
+  const hasNextPage = threadCount > page * 50;
   return (
     <div className="flex h-full w-fit items-center gap-2">
       <MailCounter page={page} />

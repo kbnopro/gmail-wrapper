@@ -15,7 +15,7 @@ export const MailCounter = ({ page }: { page: number }) => {
   }
 
   const start = 1 + (page - 1) * MAX_THREAD_PER_PAGE;
-  const end = start + MAX_THREAD_PER_PAGE - 1;
+  const end = Math.min(start + MAX_THREAD_PER_PAGE - 1, threadCount);
 
   return (
     <div className="text-xs text-gray-500">
