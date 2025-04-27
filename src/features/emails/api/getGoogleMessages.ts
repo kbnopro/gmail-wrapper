@@ -47,7 +47,6 @@ export const getGoogleMessages = async ({
     throw new Error("Cannot get response boundary");
   }
 
-  console.log(body);
   if (!res.ok) {
     console.error(await res.json());
     throw new Error("Failed to fetch messages");

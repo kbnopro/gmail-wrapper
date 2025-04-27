@@ -6,6 +6,7 @@ import { getUserToken } from "./getUserToken";
 import { saveMessages } from "./saveMessages";
 
 export const fullSyncMessages = async (userId: string) => {
+  console.log("Full Sync Messages");
   const token = await getUserToken(userId);
   if (!token) {
     // TODO: Handle error token
@@ -26,11 +27,13 @@ export const fullSyncMessages = async (userId: string) => {
       token,
       pageToken: curToken,
     });
+    console.log(messageList);
 
     const messages = await getGoogleMessages({
       token,
       messagesId: messageList.messages.map(({ id }) => id),
     });
+    console.log(messages);
 
     await saveMessages({ messages, userId });
 

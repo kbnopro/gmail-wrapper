@@ -19,7 +19,7 @@ export const syncMessages = async (userId: string) => {
         latestHistoryId: true,
       },
     });
-    if (!syncState?.isFullSync) {
+    if (!syncState) {
       return;
     }
 
@@ -43,10 +43,10 @@ export const syncMessages = async (userId: string) => {
         isFullSync: false,
       },
     });
+    console.error(e);
     throw e;
   }
-
-  return await db.user.update({
+  await db.user.update({
     where: {
       id: userId,
     },

@@ -63,6 +63,7 @@ export const authConfig = {
       if (!message.user.id) {
         return;
       }
+      console.log(message);
       void syncMessages(message.user.id);
     },
   },

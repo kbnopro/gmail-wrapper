@@ -7,10 +7,15 @@ import type { ReactNode } from "react";
 export const NavigationLinks = ({
   children,
   href,
+  mainHref,
   ...props
-}: Omit<LinkProps, "href"> & { href: string; children: ReactNode }) => {
+}: Omit<LinkProps, "href"> & {
+  mainHref: string;
+  href: string;
+  children: ReactNode;
+}) => {
   const pathname = usePathname();
-  const active = href.startsWith(pathname) && (pathname != "/" || href == "/");
+  const active = pathname.startsWith(mainHref);
   return (
     <div className="pr-4">
       <Link
