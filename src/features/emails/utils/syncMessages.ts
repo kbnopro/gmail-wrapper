@@ -43,6 +43,7 @@ export const syncMessages = async (userId: string) => {
         isFullSync: false,
       },
     });
+    console.error(e);
     throw e;
   }
 
