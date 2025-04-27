@@ -5,6 +5,7 @@ export const useSyncMessages = () => {
   return api.message.sync.useMutation({
     async onSettled() {
       await utils.thread.getList.invalidate();
+      await utils.thread.count.invalidate();
     },
   });
 };
