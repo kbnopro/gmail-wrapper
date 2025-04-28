@@ -1,5 +1,24 @@
+import { useEffect, useState } from "react";
+
 import type { Thread } from "../../types";
-import { MediumDate, ShortTime } from "../../utils/dateTimeFormat";
+
+const MediumDate = new Intl.DateTimeFormat("en-US", {
+  dateStyle: "medium",
+});
+
+const ShortTime = new Intl.DateTimeFormat("en-US", {
+  timeStyle: "short",
+});
+const getDisplayedDate = (date: Date) => {
+  const now = new Date(Date.now());
+  if (date.getFullYear() == now.getFullYear()) {
+    if (date.getMonth() == now.getMonth() && date.getDate() == now.getDate()) {
+      return ShortTime.format(date);
+    }
+    return MediumDate.format(date).split(",")[0];
+  }
+  return MediumDate.format(date);
+};
 
 export const ThreadRow = ({
   subject,
@@ -7,20 +26,11 @@ export const ThreadRow = ({
   snippet,
   internalDate,
 }: Thread) => {
-  const date = new Date(internalDate);
-  const now = new Date(Date.now());
-  const displayedDate = () => {
-    if (date.getFullYear() == now.getFullYear()) {
-      if (
-        date.getMonth() == now.getMonth() &&
-        date.getDate() == now.getDate()
-      ) {
-        return ShortTime.format(date);
-      }
-      return MediumDate.format(date).split(",")[0];
-    }
-    return MediumDate.format(date);
-  };
+  const [displayedDate, setDisplayedDate] = useState<string | null>(null);
+  useEffect(() => {
+    const date = new Date(internalDate);
+    setDisplayedDate(getDisplayedDate(date) ?? "");
+  }, [internalDate]);
   return (
     <div
       key={threadId}
@@ -32,7 +42,11 @@ export const ThreadRow = ({
           {" - "}
           <span>{snippet.trim()}</span>
         </div>
-        <div className="shrink-0 text-sm text-gray-500">{displayedDate()}</div>
+        <div className="shrink-0 text-sm text-gray-500">
+          {displayedDate ?? (
+            <div className="h-5 w-16 animate-pulse rounded-md bg-gray-200"></div>
+          )}
+        </div>
       </div>
     </div>
   );
