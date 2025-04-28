@@ -4,32 +4,17 @@ import { fullSyncMessages } from "./fullSyncMessages";
 import { partialSyncMessages } from "./partialSyncMessages";
 
 export const syncMessages = async (userId: string) => {
-  const [user] = await db.user.updateManyAndReturn({
+  const user = await db.user.findUniqueOrThrow({
     where: {
       id: userId,
-      isPartialSyncing: false,
-    },
-    data: {
-      isPartialSyncing: true,
     },
     select: {
       latestHistoryId: true,
     },
   });
-  if (!user) {
-    return;
-  }
   const partialSyncQuery = await partialSyncMessages({
     userId,
     latestHistoryId: user.latestHistoryId,
-  });
-  await db.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      isPartialSyncing: false,
-    },
   });
   if (!partialSyncQuery.ok) {
     // if partial sync does not work, stop everythin and full sync
@@ -38,7 +23,6 @@ export const syncMessages = async (userId: string) => {
         id: userId,
       },
       data: {
-        isFullSyncing: false,
         nextPageToken: null,
       },
     });

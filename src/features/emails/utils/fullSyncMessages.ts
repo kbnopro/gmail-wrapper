@@ -16,47 +16,17 @@ export const fullSyncMessages = async (
   }
 
   // TODO: Exponential back off, handling single query fail, limit retry time
-
-  const [user] = await db.user.updateManyAndReturn({
+  const user = await db.user.findUniqueOrThrow({
     where: {
       id: userId,
-      isFullSyncing: false,
     },
-    data: {
-      isFullSyncing: true,
+    select: {
+      nextPageToken: true,
     },
   });
 
-  let curToken = undefined;
-  if (!user) {
-    // this is not the initial trigger
-    const user = await db.user.findUnique({
-      where: {
-        id: userId,
-      },
-      select: {
-        nextPageToken: true,
-      },
-    });
-    if (!user) {
-      throw new Error("User does not exist");
-    }
-    if (!user.nextPageToken) {
-      throw new Error("Next page token not found.");
-    }
-    curToken = user.nextPageToken;
-  } else {
-    // This is the initial request
-    // Only resync if specifically requested
+  if (user.nextPageToken === null) {
     if (!shouldResync) {
-      await db.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          isFullSyncing: false,
-        },
-      });
       return;
     }
     await db.message.deleteMany({
@@ -65,6 +35,8 @@ export const fullSyncMessages = async (
       },
     });
   }
+
+  let curToken = user.nextPageToken ?? undefined;
 
   while (true) {
     const messageList = await getGoogleMessageList({
@@ -90,26 +62,22 @@ export const fullSyncMessages = async (
       });
     }
 
-    if (!messageList.nextPageToken) {
-      await db.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          nextPageToken: null,
-          isFullSyncing: false,
-        },
-      });
+    // Optimistic concurrency control
+    const [user] = await db.user.updateManyAndReturn({
+      where: {
+        id: userId,
+        nextPageToken: curToken ?? null,
+      },
+      data: {
+        nextPageToken: messageList.nextPageToken ?? null,
+      },
+    });
+    if (!user) {
       break;
     }
     curToken = messageList.nextPageToken;
-    await db.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        nextPageToken: messageList.nextPageToken,
-      },
-    });
+    if (!messageList.nextPageToken) {
+      break;
+    }
   }
 };

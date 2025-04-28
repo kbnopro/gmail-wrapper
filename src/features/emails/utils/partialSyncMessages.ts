@@ -69,9 +69,6 @@ export const partialSyncMessages = async ({
           data: {
             latestHistoryId: historyRecord.id,
           },
-          select: {
-            latestHistoryId: true,
-          },
         });
         if (!newUser) {
           return { ok: true };
