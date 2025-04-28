@@ -9,7 +9,7 @@ interface MessagePart {
   partId: string;
   mimeType: string;
   filename?: string;
-  headers: MessageHeader[];
+  headers?: MessageHeader[];
   body: {
     size: number;
     data: string;

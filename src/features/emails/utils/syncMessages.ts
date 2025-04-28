@@ -4,54 +4,46 @@ import { fullSyncMessages } from "./fullSyncMessages";
 import { partialSyncMessages } from "./partialSyncMessages";
 
 export const syncMessages = async (userId: string) => {
-  // Simple optimistic concurrency control
-  try {
-    const [syncState] = await db.user.updateManyAndReturn({
-      where: {
-        id: userId,
-        isFullSync: false,
-      },
-      data: {
-        isFullSync: true,
-      },
-      select: {
-        isFullSync: true,
-        latestHistoryId: true,
-      },
-    });
-    if (!syncState) {
-      return;
-    }
-
-    if (!!syncState.latestHistoryId) {
-      const partialSyncResult = await partialSyncMessages({
-        userId,
-        latestHistoryId: syncState.latestHistoryId,
-      });
-      if (partialSyncResult === null) {
-        await fullSyncMessages(userId);
-      }
-    } else {
-      await fullSyncMessages(userId);
-    }
-  } catch (e) {
-    await db.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        isFullSync: false,
-      },
-    });
-    console.error(e);
-    throw e;
+  const [user] = await db.user.updateManyAndReturn({
+    where: {
+      id: userId,
+      isPartialSyncing: false,
+    },
+    data: {
+      isPartialSyncing: true,
+    },
+    select: {
+      latestHistoryId: true,
+    },
+  });
+  if (!user) {
+    return;
   }
+  const partialSyncQuery = await partialSyncMessages({
+    userId,
+    latestHistoryId: user.latestHistoryId,
+  });
   await db.user.update({
     where: {
       id: userId,
     },
     data: {
-      isFullSync: false,
+      isPartialSyncing: false,
     },
   });
+  if (!partialSyncQuery.ok) {
+    // if partial sync does not work, stop everythin and full sync
+    await db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        isFullSyncing: false,
+        nextPageToken: null,
+      },
+    });
+    await fullSyncMessages(userId, true);
+  }
+  // use the rest of the query time to full sync
+  await fullSyncMessages(userId);
 };

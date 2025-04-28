@@ -10,13 +10,17 @@ export const partialSyncMessages = async ({
   latestHistoryId,
 }: {
   userId: string;
-  latestHistoryId: string;
+  latestHistoryId: string | null;
 }) => {
   const token = await getUserToken(userId);
   if (!token) {
     // TODO: Handle error token
-    return;
+    return { ok: true };
   }
+  if (latestHistoryId === null) {
+    return { ok: false };
+  }
+
   let curToken = undefined;
   while (true) {
     const histories = await getGoogleHistories({
@@ -26,11 +30,12 @@ export const partialSyncMessages = async ({
     });
 
     if (!histories) {
-      return null;
+      // cannot find history
+      return { ok: false };
     }
 
     if (!histories.history) {
-      return undefined;
+      return { ok: true };
     }
 
     await Promise.all(
@@ -56,14 +61,21 @@ export const partialSyncMessages = async ({
             },
           });
         }
-        await db.user.update({
+        const [newUser] = await db.user.updateManyAndReturn({
           where: {
             id: userId,
+            latestHistoryId,
           },
           data: {
             latestHistoryId: historyRecord.id,
           },
+          select: {
+            latestHistoryId: true,
+          },
         });
+        if (!newUser) {
+          return { ok: true };
+        }
       }),
     );
     if (!histories.nextPageToken) {
@@ -71,4 +83,5 @@ export const partialSyncMessages = async ({
     }
     curToken = histories.nextPageToken;
   }
+  return { ok: true };
 };

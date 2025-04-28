@@ -11,12 +11,18 @@ export const saveMessages = async ({
   userId: string;
 }) => {
   return db.message.createMany({
-    data: messages.map((message) => {
-      return {
-        ...parseMessage(message),
-        ownerId: userId,
-      };
-    }),
+    data: messages
+      .map((message) => {
+        try {
+          return {
+            ...parseMessage(message),
+            ownerId: userId,
+          };
+        } catch {
+          return undefined;
+        }
+      })
+      .filter((message) => !!message),
     skipDuplicates: true,
   });
 };

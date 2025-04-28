@@ -5,8 +5,10 @@ import { getGoogleMessages } from "../api/getGoogleMessages";
 import { getUserToken } from "./getUserToken";
 import { saveMessages } from "./saveMessages";
 
-export const fullSyncMessages = async (userId: string) => {
-  console.log("Full Sync Messages");
+export const fullSyncMessages = async (
+  userId: string,
+  shouldResync = false,
+) => {
   const token = await getUserToken(userId);
   if (!token) {
     // TODO: Handle error token
@@ -15,25 +17,65 @@ export const fullSyncMessages = async (userId: string) => {
 
   // TODO: Exponential back off, handling single query fail, limit retry time
 
-  await db.message.deleteMany({
+  const [user] = await db.user.updateManyAndReturn({
     where: {
-      ownerId: userId,
+      id: userId,
+      isFullSyncing: false,
+    },
+    data: {
+      isFullSyncing: true,
     },
   });
 
   let curToken = undefined;
+  if (!user) {
+    // this is not the initial trigger
+    const user = await db.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        nextPageToken: true,
+      },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+    if (!user.nextPageToken) {
+      throw new Error("Next page token not found.");
+    }
+    curToken = user.nextPageToken;
+  } else {
+    // This is the initial request
+    // Only resync if specifically requested
+    if (!shouldResync) {
+      await db.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          isFullSyncing: false,
+        },
+      });
+      return;
+    }
+    await db.message.deleteMany({
+      where: {
+        ownerId: userId,
+      },
+    });
+  }
+
   while (true) {
     const messageList = await getGoogleMessageList({
       token,
       pageToken: curToken,
     });
-    console.log(messageList);
 
     const messages = await getGoogleMessages({
       token,
       messagesId: messageList.messages.map(({ id }) => id),
     });
-    console.log(messages);
 
     await saveMessages({ messages, userId });
 
@@ -49,9 +91,25 @@ export const fullSyncMessages = async (userId: string) => {
     }
 
     if (!messageList.nextPageToken) {
+      await db.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          nextPageToken: null,
+          isFullSyncing: false,
+        },
+      });
       break;
     }
-
     curToken = messageList.nextPageToken;
+    await db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        nextPageToken: messageList.nextPageToken,
+      },
+    });
   }
 };
