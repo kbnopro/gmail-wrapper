@@ -1,10 +1,8 @@
 import { redirect } from "next/navigation";
 
-import { AccountButton } from "@/components/AccountButton";
 import { RefreshTokenError } from "@/features/emails/components/RefreshTokenError";
-import { SearchBar } from "@/features/emails/components/SearchBar";
 import { ThreadsTable } from "@/features/emails/components/ThreadTable";
-import { TopEmailBar } from "@/features/emails/components/TopEmailBar";
+import { TopThreadListBar } from "@/features/emails/components/TopThreadListBar";
 import { auth } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
 
@@ -21,20 +19,12 @@ const Page = async ({ params }: { params: Promise<{ page: string }> }) => {
   await api.thread.count.prefetch();
 
   return (
-    <div className="flex h-screen max-h-screen w-0 grow flex-col">
-      <div className="flex h-16 w-full shrink-0 items-center">
-        <SearchBar />
-        <div className="flex grow justify-end px-2 md:px-4">
-          <AccountButton />
-        </div>
-      </div>
-      <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white">
-        {refreshTokenError && <RefreshTokenError />}
-        <HydrateClient>
-          <TopEmailBar page={pageInt} />
-          <ThreadsTable page={pageInt} />
-        </HydrateClient>
-      </div>
+    <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white">
+      {refreshTokenError && <RefreshTokenError />}
+      <HydrateClient>
+        <TopThreadListBar page={pageInt} />
+        <ThreadsTable email={session.user.email!} page={pageInt} />
+      </HydrateClient>
     </div>
   );
 };

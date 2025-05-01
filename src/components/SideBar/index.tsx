@@ -14,7 +14,7 @@ export const SideBar = () => {
           <ComposeButton />
         </div>
         <div className="flex h-fit w-full flex-col">
-          <NavigationLinks href="/emails/1" mainHref="/emails">
+          <NavigationLinks href="/emails/1" mainHref="/email">
             <EnvelopeIcon strokeWidth={2.5} className="size-5"></EnvelopeIcon>
             <div className="relative h-fit text-sm font-bold">Emails</div>
           </NavigationLinks>

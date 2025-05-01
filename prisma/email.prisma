@@ -5,6 +5,8 @@ model Message {
   snippet      String
   threadId     String
   ownerId      String
+  receiver     String
+  sender       String
   owner        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   messageParts MessagePart[]
 
@@ -12,7 +14,9 @@ model Message {
 }
 
 model MessagePart {
-  id        String  @id @default(cuid())
   messageId String
+  partId    Int
   message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@id([messageId, partId])
 }

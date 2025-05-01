@@ -2,6 +2,7 @@ import { db } from "@/server/db";
 
 import { getGoogleMessageList } from "../api/getGoogleMessageList";
 import { getGoogleMessages } from "../api/getGoogleMessages";
+import { deleteMessages } from "./deleteMessages";
 import { getUserToken } from "./getUserToken";
 import { saveMessages } from "./saveMessages";
 
@@ -29,11 +30,7 @@ export const fullSyncMessages = async (
     if (!shouldResync) {
       return;
     }
-    await db.message.deleteMany({
-      where: {
-        ownerId: userId,
-      },
-    });
+    await deleteMessages({ userId });
   }
 
   let curToken = user.nextPageToken ?? undefined;

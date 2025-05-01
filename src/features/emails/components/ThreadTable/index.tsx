@@ -1,11 +1,34 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { useThreadList } from "@/features/emails/hooks/useThreadList";
 
+import type { DisplayedThread } from "../../types";
+import { getDisplayedDate } from "../../utils/getDisplayedDate";
 import { ThreadRow } from "./ThreadRow";
 
-export const ThreadsTable = ({ page }: { page: number }) => {
+export const ThreadsTable = ({
+  page,
+  email,
+}: {
+  page: number;
+  email: string;
+}) => {
   const [threadsList, threadsListQuery] = useThreadList(page);
+  const [displayedThreadsList, setDisplayedThreadList] = useState<
+    DisplayedThread[]
+  >(threadsList.map((thread) => ({ ...thread, internalDate: undefined })));
+
+  useEffect(() => {
+    setDisplayedThreadList(
+      threadsList.map((thread, idx) => ({
+        ...thread,
+        internalDate: getDisplayedDate(threadsList[idx]!.internalDate),
+      })),
+    );
+  }, [threadsList, setDisplayedThreadList]);
+
   // TODO: Handle loading and error state
   if (threadsListQuery.isLoading) {
     return <></>;
@@ -16,7 +39,9 @@ export const ThreadsTable = ({ page }: { page: number }) => {
   return (
     <div className="flex h-0 w-full grow overflow-y-auto">
       <div className="flex w-0 max-w-full grow flex-col">
-        {threadsList.map(ThreadRow)}
+        {displayedThreadsList.map((thread) => (
+          <ThreadRow email={email} key={thread.id} {...thread} />
+        ))}
       </div>
     </div>
   );

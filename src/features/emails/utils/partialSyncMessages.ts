@@ -2,6 +2,7 @@ import { db } from "@/server/db";
 
 import { getGoogleHistories } from "../api/getGoogleHistories";
 import { getGoogleMessages } from "../api/getGoogleMessages";
+import { deleteMessages } from "./deleteMessages";
 import { getUserToken } from "./getUserToken";
 import { saveMessages } from "./saveMessages";
 
@@ -51,14 +52,11 @@ export const partialSyncMessages = async ({
         }
 
         if (!!historyRecord.messagesDeleted) {
-          await db.message.deleteMany({
-            where: {
-              id: {
-                in: historyRecord.messagesDeleted.map(
-                  ({ message }) => message.id,
-                ),
-              },
-            },
+          await deleteMessages({
+            userId,
+            messagesId: historyRecord.messagesDeleted.map(
+              ({ message }) => message.id,
+            ),
           });
         }
         const [newUser] = await db.user.updateManyAndReturn({

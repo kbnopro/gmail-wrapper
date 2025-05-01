@@ -1,8 +1,10 @@
 view ThreadList {
-  threadId     String
+  id           String   @id
   internalDate DateTime
   subject      String
   snippet      String
+  threadId     String
   ownerId      String
-  id           String   @id
+  receiver     String
+  sender       String
 }
