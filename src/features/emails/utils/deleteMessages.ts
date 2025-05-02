@@ -9,21 +9,7 @@ export const deleteMessages = async ({
   userId: string;
   messagesId?: string[];
 }) => {
-  const parts = await db.messagePart.findMany({
-    where: {
-      message: {
-        ownerId: userId,
-        id: {
-          in: messagesId,
-        },
-      },
-    },
-    select: {
-      messageId: true,
-      partId: true,
-    },
-  });
-  const messages = await db.message.deleteMany({
+  const messages = await db.message.findMany({
     where: {
       ownerId: userId,
       id: {
@@ -31,12 +17,17 @@ export const deleteMessages = async ({
       },
     },
   });
-
+  await db.message.deleteMany({
+    where: {
+      ownerId: userId,
+      id: {
+        in: messagesId,
+      },
+    },
+  });
   await Promise.all(
-    parts.map(async (part) => {
-      await deleteAwsObject({
-        key: `${userId}_${part.messageId}_${part.partId}`,
-      });
+    messages.map(async (message) => {
+      await deleteAwsObject({ key: message.id });
     }),
   );
 

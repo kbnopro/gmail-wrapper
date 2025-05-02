@@ -1,29 +1,13 @@
 import { type db } from "@/server/db";
 
-interface MessageHeader {
-  name: string;
-  value: string;
-}
-
-interface MessagePart {
-  partId: string;
-  mimeType: string;
-  filename?: string;
-  headers?: MessageHeader[];
-  body: {
-    size: number;
-    data: string;
-  };
-  parts: MessagePart[];
-}
-
 export interface Message {
   id: string;
   threadId: string;
   internalDate: string;
   snippet: string;
   historyId: string;
-  payload: MessagePart;
+  raw: string;
+  error?: string;
 }
 
 export interface MessageList {

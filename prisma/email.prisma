@@ -1,5 +1,5 @@
 model Message {
-  id           String        @id
+  id           String   @id
   internalDate DateTime
   subject      String
   snippet      String
@@ -7,16 +7,7 @@ model Message {
   ownerId      String
   receiver     String
   sender       String
-  owner        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  messageParts MessagePart[]
+  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@index([threadId])
-}
-
-model MessagePart {
-  messageId String
-  partId    Int
-  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
-
-  @@id([messageId, partId])
 }

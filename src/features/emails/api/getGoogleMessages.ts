@@ -1,5 +1,4 @@
 import type { Message } from "../types";
-import { parseMessage } from "../utils/parseMessage";
 
 export const getGoogleMessages = async ({
   token,
@@ -16,7 +15,7 @@ export const getGoogleMessages = async ({
         `/gmail/v1/users/me/messages/${id}`,
         "https://gmail.googleapis.com/gmail/v1",
       );
-      url.searchParams.set("format", "full");
+      url.searchParams.set("format", "raw");
       return [
         `--${boundary}`,
         "Content-Type: application/http",
@@ -65,11 +64,8 @@ export const getGoogleMessages = async ({
         return;
       }
       const data = JSON.parse(processedText) as Message;
-      try {
-        parseMessage(data);
-      } catch {
-        // TODO: Handle parse error (mostly caused by message not found)
-        return undefined;
+      if (!!data.error) {
+        return;
       }
       return data;
     })

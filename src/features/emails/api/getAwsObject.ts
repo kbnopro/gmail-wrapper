@@ -10,8 +10,5 @@ export const getAwsObject = async ({ key }: { key: string }) => {
       Bucket: env.AWS_BUCKET_NAME,
     }),
   );
-  return Buffer.from(
-    (await Body?.transformToString("utf-8")) ?? "",
-    "base64",
-  ).toString();
+  return (await Body?.transformToString("utf-8")) ?? "";
 };

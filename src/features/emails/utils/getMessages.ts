@@ -20,14 +20,6 @@ export const getMessages = async ({
       receiver: true,
       internalDate: true,
       subject: true,
-      messageParts: {
-        select: {
-          partId: true,
-        },
-        orderBy: {
-          partId: "asc",
-        },
-      },
     },
     orderBy: {
       internalDate: "asc",
@@ -37,17 +29,7 @@ export const getMessages = async ({
     messages.map(async (message) => {
       return {
         ...message,
-        messageParts: await Promise.all(
-          message.messageParts.map(async (part) => {
-            const body = await getAwsObject({
-              key: `${userId}_${message.id}_${part.partId}`,
-            });
-            return {
-              ...part,
-              body: body,
-            };
-          }),
-        ),
+        body: await getAwsObject({ key: message.id }),
       };
     }),
   );
