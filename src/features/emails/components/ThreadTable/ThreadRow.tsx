@@ -28,7 +28,7 @@ export const ThreadRow = ({
       className="flex h-fit w-full cursor-pointer border-t border-t-gray-200 px-6 py-2 hover:border-t-gray-300 hover:shadow-md"
     >
       <div className="flex w-0 grow items-center gap-10">
-        <div className="line-clamp-1 shrink-0 grow-0 basis-44 text-wrap text-[16px]">
+        <div className="line-clamp-1 shrink-0 grow-0 basis-44 text-wrap text-sm font-medium">
           {isSender ? `To: ${dislayedName(receiver)}` : dislayedName(sender)}
         </div>
         <div className="grow truncate text-sm text-gray-500">

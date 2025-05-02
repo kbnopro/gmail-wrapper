@@ -40,7 +40,7 @@ export const Message = ({
             </div>
           </div>
           <div
-            className="text-md pb-4 text-gray-600"
+            className="text-md pb-5 text-xs font-normal text-gray-800"
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(message.body),
             }}
