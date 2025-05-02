@@ -32,5 +32,5 @@ export const getThreadPage = async ({
       },
     },
   });
-  return count / MAX_THREAD_PER_PAGE + 1;
+  return Math.round(count / MAX_THREAD_PER_PAGE) + 1;
 };
