@@ -1,10 +1,51 @@
+"use client";
+
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+import { useSearchStore } from "../stores/searchString";
 
 export const SearchBar = () => {
+  const searchString = useSearchStore((state) => state.searchString);
+  const setSearchString = useSearchStore((state) => state.setSearchString);
+  const [isTyping, setIsTyping] = useState(false);
+  const router = useRouter();
+  if (isTyping) {
+    return (
+      <div className="ml-2 flex size-fit h-11 w-full max-w-2xl cursor-text items-center gap-3 rounded-full border bg-white px-5 text-gray-800 shadow-md">
+        <MagnifyingGlassIcon className="size-[18px]" strokeWidth={2} />
+        <input
+          autoFocus
+          className="w-full focus:outline-0"
+          onBlur={() => {
+            setIsTyping(false);
+          }}
+          defaultValue={searchString}
+          onKeyDown={(e) => {
+            setSearchString(e.currentTarget.value);
+            if (e.key == "Enter") {
+              setIsTyping(false);
+              router.push(`/emails/1/${e.currentTarget.value}`);
+            }
+          }}
+        />
+      </div>
+    );
+  }
   return (
-    <div className="ml-2 flex size-fit h-11 w-full max-w-2xl items-center gap-3 rounded-full bg-slate-200/70 px-5">
+    <button
+      onClick={() => {
+        setIsTyping(true);
+      }}
+      className="ml-2 flex size-fit h-11 w-full max-w-2xl cursor-text items-center gap-3 rounded-full bg-slate-200/70 px-5 text-gray-800"
+    >
       <MagnifyingGlassIcon className="size-[18px]" strokeWidth={2} />
-      <div className="text-md h-fit text-gray-500">Search mail</div>
-    </div>
+      {searchString.length ? (
+        <div className="text-md h-fit text-gray-800">{searchString}</div>
+      ) : (
+        <div className="text-md h-fit text-gray-500">Search mail</div>
+      )}
+    </button>
   );
 };
