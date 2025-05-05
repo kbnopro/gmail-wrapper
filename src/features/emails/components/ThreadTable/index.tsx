@@ -11,11 +11,13 @@ import { ThreadRow } from "./ThreadRow";
 export const ThreadsTable = ({
   page,
   email,
+  search,
 }: {
   page: number;
   email: string;
+  search: string;
 }) => {
-  const [threadsList, threadsListQuery] = useThreadList(page);
+  const [threadsList, threadsListQuery] = useThreadList({ page, search });
   const [displayedThreadsList, setDisplayedThreadList] = useState<
     DisplayedThread[]
   >(threadsList.map((thread) => ({ ...thread, internalDate: undefined })));

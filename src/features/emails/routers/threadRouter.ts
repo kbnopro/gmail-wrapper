@@ -8,9 +8,13 @@ import { getThreadPage } from "../utils/getThreadPage";
 
 export const threadRouter = createTRPCRouter({
   getList: protectedProcedure
-    .input(z.object({ page: z.number() }))
+    .input(z.object({ page: z.number(), search: z.string() }))
     .query(({ input, ctx }) => {
-      return getThreadList({ userId: ctx.session.user.id, page: input.page });
+      return getThreadList({
+        userId: ctx.session.user.id,
+        page: input.page,
+        search: input.search,
+      });
     }),
   count: protectedProcedure.query(({ ctx }) => {
     return getThreadCount(ctx.session.user.id);

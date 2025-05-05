@@ -7,4 +7,5 @@ view ThreadList {
   ownerId      String
   receiver     String
   sender       String
+  content      String
 }

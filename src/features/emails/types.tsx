@@ -17,7 +17,7 @@ export interface MessageList {
 }
 
 export type Thread = Awaited<ReturnType<typeof db.message.findMany>>[number];
-export type DisplayedThread = Omit<Thread, "internalDate"> & {
+export type DisplayedThread = Omit<Thread, "internalDate" | "content"> & {
   internalDate?: string;
 };
 

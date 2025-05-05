@@ -12,7 +12,6 @@ export const ThreadRow = ({
   email,
 }: DisplayedThread & { email: string }) => {
   const isSender = sender.includes(email);
-  console.log(sender, receiver);
 
   const dislayedName = (name: string) => {
     return name

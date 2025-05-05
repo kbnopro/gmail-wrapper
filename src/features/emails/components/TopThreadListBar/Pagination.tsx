@@ -7,7 +7,13 @@ import Link from "next/link";
 import { useThreadCount } from "../../hooks/useThreadCount";
 import { MailCounter } from "./MailCounter";
 
-export const Pagination = ({ page }: { page: number }) => {
+export const Pagination = ({
+  page,
+  search,
+}: {
+  page: number;
+  search: string;
+}) => {
   const [threadCount, threadCountQuery] = useThreadCount();
   if (threadCountQuery.isLoading) {
     return <></>;
@@ -22,7 +28,11 @@ export const Pagination = ({ page }: { page: number }) => {
     <div className="flex h-full w-fit items-center gap-2">
       <MailCounter page={page} />
       <Link
-        href={hasPrevPage ? `/emails/${page - 1}` : `/emails/${page}`}
+        href={
+          hasPrevPage
+            ? `/emails/${page - 1}/${search}`
+            : `/emails/${page}/${search}`
+        }
         className={clsx(
           "flex size-10 cursor-pointer items-center justify-center rounded-full",
           hasPrevPage && "hover:bg-gray-100",
@@ -37,7 +47,11 @@ export const Pagination = ({ page }: { page: number }) => {
         />
       </Link>
       <Link
-        href={hasNextPage ? `/emails/${page + 1}` : `/emails/${page}`}
+        href={
+          hasNextPage
+            ? `/emails/${page + 1}/${search}`
+            : `/emails/${page}/${search}`
+        }
         className={clsx(
           "flex size-10 cursor-pointer items-center justify-center rounded-full",
           hasNextPage && "hover:bg-gray-100",

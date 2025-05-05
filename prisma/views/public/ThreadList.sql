@@ -6,7 +6,8 @@ SELECT
   "threadId",
   "ownerId",
   receiver,
-  sender
+  sender,
+  content
 FROM
   "Message"
 ORDER BY
