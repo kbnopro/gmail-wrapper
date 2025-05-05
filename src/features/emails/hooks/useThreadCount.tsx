@@ -1,5 +1,5 @@
 import { api } from "@/trpc/react";
 
-export const useThreadCount = () => {
-  return api.thread.count.useSuspenseQuery();
+export const useThreadCount = (search: string) => {
+  return api.thread.count.useSuspenseQuery({ search });
 };

@@ -6,36 +6,24 @@ import { TopThreadListBar } from "@/features/emails/components/TopThreadListBar"
 import { auth } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
 
-const Page = async ({
-  params,
-}: {
-  params: Promise<{ page: string; search?: string[] }>;
-}) => {
+const Page = async ({ params }: { params: Promise<{ page: string }> }) => {
   const session = await auth();
-  const { page, search } = await params;
+  const { page } = await params;
   if (!session) redirect("/login");
   const refreshTokenError = session.error === "RefreshTokenError";
   const pageInt = parseInt(page);
   if (isNaN(pageInt)) {
     throw new Error("Invalid page");
   }
-  if (search && search.length > 1) {
-    redirect(`/emails/${page}/${search[0]!}`);
-  }
-  const searchString = decodeURIComponent(search?.at(0) ?? "");
-  await api.thread.getList.prefetch({ page: pageInt, search: searchString });
-  await api.thread.count.prefetch();
+  void api.thread.getList.prefetch({ page: pageInt, search: "" });
+  void api.thread.count.prefetch({ search: "" });
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white">
       {refreshTokenError && <RefreshTokenError />}
       <HydrateClient>
-        <TopThreadListBar page={pageInt} search={searchString} />
-        <ThreadsTable
-          email={session.user.email!}
-          page={pageInt}
-          search={searchString}
-        />
+        <TopThreadListBar page={pageInt} />
+        <ThreadsTable email={session.user.email!} page={pageInt} />
       </HydrateClient>
     </div>
   );

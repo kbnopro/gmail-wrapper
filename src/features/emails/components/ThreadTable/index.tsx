@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { useThreadList } from "@/features/emails/hooks/useThreadList";
 
+import { useSearchStore } from "../../stores/searchString";
 import type { DisplayedThread } from "../../types";
 import { getDisplayedDate } from "../../utils/getDisplayedDate";
 import { ThreadRow } from "./ThreadRow";
@@ -11,13 +12,15 @@ import { ThreadRow } from "./ThreadRow";
 export const ThreadsTable = ({
   page,
   email,
-  search,
 }: {
   page: number;
   email: string;
-  search: string;
 }) => {
-  const [threadsList, threadsListQuery] = useThreadList({ page, search });
+  const searchString = useSearchStore((state) => state.searchString);
+  const [threadsList, threadsListQuery] = useThreadList({
+    page,
+    search: searchString,
+  });
   const [displayedThreadsList, setDisplayedThreadList] = useState<
     DisplayedThread[]
   >(threadsList.map((thread) => ({ ...thread, internalDate: undefined })));

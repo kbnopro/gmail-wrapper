@@ -16,9 +16,14 @@ export const threadRouter = createTRPCRouter({
         search: input.search,
       });
     }),
-  count: protectedProcedure.query(({ ctx }) => {
-    return getThreadCount(ctx.session.user.id);
-  }),
+  count: protectedProcedure
+    .input(z.object({ search: z.string() }))
+    .query(({ ctx, input }) => {
+      return getThreadCount({
+        userId: ctx.session.user.id,
+        search: input.search,
+      });
+    }),
   getPage: protectedProcedure
     .input(z.object({ threadId: z.string() }))
     .query(({ ctx, input }) => {

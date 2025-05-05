@@ -3,9 +3,11 @@
 import { MAX_THREAD_PER_PAGE } from "@/config";
 
 import { useThreadCount } from "../../hooks/useThreadCount";
+import { useSearchStore } from "../../stores/searchString";
 
 export const MailCounter = ({ page }: { page: number }) => {
-  const [threadCount, threadCountQuery] = useThreadCount();
+  const searchString = useSearchStore((state) => state.searchString);
+  const [threadCount, threadCountQuery] = useThreadCount(searchString);
   // TODO: Handle error and loading state
   if (threadCountQuery.isPending) {
     return <></>;

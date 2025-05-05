@@ -23,10 +23,10 @@ export const SearchBar = () => {
           }}
           defaultValue={searchString}
           onKeyDown={(e) => {
-            setSearchString(e.currentTarget.value);
             if (e.key == "Enter") {
               setIsTyping(false);
-              router.push(`/emails/1/${e.currentTarget.value}`);
+              setSearchString(e.currentTarget.value);
+              router.push(`/emails/1`);
             }
           }}
         />
