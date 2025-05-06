@@ -10,7 +10,6 @@ export const SearchBar = () => {
   const searchString = useSearchStore((state) => state.searchString);
   const setSearchString = useSearchStore((state) => state.setSearchString);
   const [isTyping, setIsTyping] = useState(false);
-  const router = useRouter();
   if (isTyping) {
     return (
       <div className="ml-2 flex size-fit h-11 w-full max-w-2xl cursor-text items-center gap-3 rounded-full border bg-white px-5 text-gray-800 shadow-md">
@@ -26,7 +25,6 @@ export const SearchBar = () => {
             if (e.key == "Enter") {
               setIsTyping(false);
               setSearchString(e.currentTarget.value);
-              router.push(`/emails/1`);
             }
           }}
         />
