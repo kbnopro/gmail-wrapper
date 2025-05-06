@@ -23,21 +23,6 @@ export const getThreadList = async ({
 }) => {
   const limit = MAX_THREAD_PER_PAGE;
   const offset = (page - 1) * limit;
-  if (!search.length) {
-    return await db.threadList.findMany({
-      where: {
-        ownerId: userId,
-      },
-      take: limit,
-      skip: offset,
-      orderBy: {
-        internalDate: "desc",
-      },
-      omit: {
-        content: true,
-      },
-    });
-  }
   return db.$queryRaw<ReturnType>`
       SELECT
         id, "internalDate", "subject", "snippet", tl."threadId", "ownerId", receiver, sender
@@ -50,5 +35,6 @@ export const getThreadList = async ({
             content LIKE ${`%${search}%`} OR subject LIKE ${`%${search}%`}
             AND "ownerId" = ${userId}
         ) tr ON tl."threadId" = tr."threadId"
+      LIMIT ${limit} OFFSET ${offset};
   `;
 };
