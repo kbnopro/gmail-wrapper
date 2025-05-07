@@ -4,6 +4,7 @@ import { type Metadata } from "next";
 
 import { AccountButton } from "@/components/AccountButton";
 import { SideBar } from "@/components/SideBar";
+import { Editor } from "@/features/emails/components/Editor";
 import { SearchBar } from "@/features/emails/components/SearchBar";
 
 export const metadata: Metadata = {
@@ -32,6 +33,7 @@ export default function RootLayout({
         </div>
         {children}
       </div>
+      <Editor />
     </div>
   );
 }
