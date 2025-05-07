@@ -4,16 +4,19 @@ interface StoreType {
   type: "none" | "send" | "reply" | "forward";
   headerSubject: string;
   recipients: string[];
+  subject: string;
   setSend: () => void;
   setNone: () => void;
   addRecipients: (email: string) => void;
   removeRecipients: (email: string) => void;
+  setSubject: (subject: string) => void;
 }
 
 export const useEditorStore = create<StoreType>((set) => ({
   type: "none",
   headerSubject: "",
   recipients: [],
+  subject: "",
   setNone: () => {
     set(() => ({ type: "none" }));
   },
@@ -24,6 +27,7 @@ export const useEditorStore = create<StoreType>((set) => ({
           type: "send",
           headerSubject: "New Message",
           recipients: [],
+          subject: "",
         };
       }
       return state;
@@ -45,6 +49,13 @@ export const useEditorStore = create<StoreType>((set) => ({
     set((state) => {
       return {
         recipients: [...state.recipients.filter((value) => value != email)],
+      };
+    });
+  },
+  setSubject(subject) {
+    set(() => {
+      return {
+        subject,
       };
     });
   },

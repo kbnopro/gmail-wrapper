@@ -3,6 +3,7 @@
 import { useEditorStore } from "../../stores/editor";
 import { Header } from "./Header";
 import { Recipients } from "./Recipients";
+import { Subject } from "./Subject";
 
 export const Editor = () => {
   const editorType = useEditorStore((state) => state.type);
@@ -14,6 +15,7 @@ export const Editor = () => {
       <Header />
       <div className="flex flex-col px-4">
         <Recipients />
+        <Subject />
       </div>
     </div>
   );
