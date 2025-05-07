@@ -2,6 +2,7 @@ import MailComposure from "nodemailer/lib/mail-composer";
 
 import { sendGoogleMessage } from "../api/sendGoogleMessage";
 import { getUserToken } from "./getUserToken";
+import { syncMessages } from "./syncMessages";
 
 interface SendData {
   userId: string;
@@ -36,10 +37,12 @@ export const sendMessage = async ({
     subject: subject,
   }).compile();
   const rawBody = (await mailObject.build()).toString("base64");
-  return sendGoogleMessage({
+  const res = await sendGoogleMessage({
     token,
     message: {
       raw: rawBody,
     },
   });
+  await syncMessages(userId);
+  return res;
 };

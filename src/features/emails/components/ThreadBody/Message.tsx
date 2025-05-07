@@ -1,3 +1,7 @@
+import {
+  ArrowTurnUpLeftIcon,
+  ArrowTurnUpRightIcon,
+} from "@heroicons/react/24/outline";
 import DOMPurify from "isomorphic-dompurify";
 
 import type { getMessages } from "../../utils/getMessages";
@@ -23,19 +27,29 @@ export const Message = ({
 }) => {
   const { username, email } = parseSender(message.sender);
   return (
-    <div className="h-fit w-full flex-col items-center pt-5">
-      <div className="flex">
+    <div className="flex h-fit w-full flex-col items-center pt-5">
+      <div className="flex w-full">
         <div className="h-fit px-4">
           <div className="flex size-10 items-center justify-center rounded-full border border-gray-200 bg-gray-100">
             {username[0]?.toUpperCase()}
           </div>
         </div>
-        <div className="flex flex-col">
-          <div className="flex h-12 flex-col">
-            <div className="flex h-fit gap-2">
-              <div className="font-semibold">{username}</div>
-              <div className="flex items-center text-xs text-gray-800">
-                {email && `<${email}>`}
+        <div className="flex w-full flex-col">
+          <div className="flex h-12 w-full flex-col">
+            <div className="flex w-full justify-between gap-3">
+              <div className="flex h-fit gap-2">
+                <div className="font-semibold">{username}</div>
+                <div className="flex items-center text-xs text-gray-800">
+                  {email && `<${email}>`}
+                </div>
+              </div>
+              <div className="mr-6 flex gap-4 text-gray-800">
+                <button className="flex rounded-full p-2 hover:bg-gray-100">
+                  <ArrowTurnUpLeftIcon className="size-[18px]" />
+                </button>
+                <button className="flex rounded-full p-2 hover:bg-gray-100">
+                  <ArrowTurnUpRightIcon className="size-[18px]" />
+                </button>
               </div>
             </div>
           </div>

@@ -14,10 +14,12 @@ export const SendButton = () => {
           recipients: editorState.recipients,
           html: editorState.content,
         });
+        editorState.setNone();
       }}
+      disabled={sendMessageQuery.isPending}
       className="rounded-full bg-blue-700 px-5 py-2 text-white shadow-blue-900 hover:shadow-lg hover:ring-1"
     >
-      Send
+      {sendMessageQuery.isPending ? "Sending" : "Send"}
     </button>
   );
 };
