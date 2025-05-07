@@ -54,7 +54,7 @@ export const saveMessages = async ({
             threadId: message.threadId,
             content: message.content.text ?? "",
             messageId: message.content.messageId ?? "",
-            inReplyTo: message.content.inReplyTo,
+            replyTo: message.content.replyTo?.text,
             references: [message.content.references ?? ""].flat().join(" "),
           };
         })

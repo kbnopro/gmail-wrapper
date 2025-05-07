@@ -1,4 +1,4 @@
-import { type db } from "@/server/db";
+import type { getThreadList } from "./utils/getThreadList";
 
 export interface Message {
   id: string;
@@ -16,7 +16,7 @@ export interface MessageList {
   resultSizeEstimate: number;
 }
 
-export type Thread = Awaited<ReturnType<typeof db.message.findMany>>[number];
+export type Thread = Awaited<ReturnType<typeof getThreadList>>[number];
 export type DisplayedThread = Omit<Thread, "internalDate" | "content"> & {
   internalDate?: string;
 };

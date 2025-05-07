@@ -10,6 +10,9 @@ type ReturnType = {
   ownerId: string;
   receiver: string;
   sender: string;
+  messageId: string;
+  references: string;
+  replyTo: string | null;
 }[];
 
 export const getThreadList = async ({
@@ -25,7 +28,7 @@ export const getThreadList = async ({
   const offset = (page - 1) * limit;
   return db.$queryRaw<ReturnType>`
       SELECT
-        id, "internalDate", "subject", "snippet", tl."threadId", "ownerId", receiver, sender
+        id, "internalDate", "subject", "snippet", tl."threadId", "ownerId", receiver, sender, "messageId", "references", "replyTo"
       FROM
         "ThreadList" tl INNER JOIN
         (
@@ -35,6 +38,8 @@ export const getThreadList = async ({
             content LIKE ${`%${search}%`} OR subject LIKE ${`%${search}%`}
             AND "ownerId" = ${userId}
         ) tr ON tl."threadId" = tr."threadId"
-      LIMIT ${limit} OFFSET ${offset};
+      ORDER BY 
+        "internalDate" DESC
+      LIMIT ${limit} OFFSET ${offset}
   `;
 };

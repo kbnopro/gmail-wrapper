@@ -1,3 +1,8 @@
+const MediumDateWithoutYear = new Intl.DateTimeFormat("en-US", {
+  day: "numeric",
+  month: "short",
+});
+
 const MediumDate = new Intl.DateTimeFormat("en-US", {
   dateStyle: "medium",
 });
@@ -12,7 +17,7 @@ export const getDisplayedDate = (date: Date) => {
     if (date.getMonth() == now.getMonth() && date.getDate() == now.getDate()) {
       return ShortTime.format(date);
     }
-    return MediumDate.format(date).split(",")[0];
+    return MediumDateWithoutYear.format(date);
   }
   return MediumDate.format(date);
 };

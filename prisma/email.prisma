@@ -8,10 +8,10 @@ model Message {
   receiver     String
   sender       String
   content      String
-  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   messageId    String
-  inReplyTo    String?
   references   String
+  replyTo      String?
+  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@index([threadId])
 }

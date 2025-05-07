@@ -8,4 +8,7 @@ view ThreadList {
   receiver     String
   sender       String
   content      String
+  messageId    String
+  references   String?
+  replyTo      String
 }

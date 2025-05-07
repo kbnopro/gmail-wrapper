@@ -4,6 +4,7 @@ import {
 } from "@heroicons/react/24/outline";
 import DOMPurify from "isomorphic-dompurify";
 
+import { getDisplayedDate } from "../../utils/getDisplayedDate";
 import type { getMessages } from "../../utils/getMessages";
 
 const parseSender = (sender: string) => {
@@ -43,7 +44,10 @@ export const Message = ({
                   {email && `<${email}>`}
                 </div>
               </div>
-              <div className="mr-6 flex gap-4 text-gray-800">
+              <div className="mr-6 flex items-center gap-4 text-gray-800">
+                <div className="h-fit text-xs text-gray-600">
+                  {getDisplayedDate(message.internalDate)}
+                </div>
                 <button className="flex rounded-full p-2 hover:bg-gray-100">
                   <ArrowTurnUpLeftIcon className="size-[18px]" />
                 </button>

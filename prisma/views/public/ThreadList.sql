@@ -7,7 +7,10 @@ SELECT
   "ownerId",
   receiver,
   sender,
-  content
+  content,
+  "messageId",
+  "references",
+  "replyTo"
 FROM
   "Message"
 ORDER BY
