@@ -18,16 +18,16 @@ export const Recipients = () => {
   return (
     <div
       tabIndex={0}
-      className="group flex min-h-10 cursor-text items-center border-b border-gray-200 py-2 text-sm text-gray-700"
+      className="group flex min-h-10 w-full shrink-0 cursor-text items-center border-b border-gray-200 py-2 text-sm text-gray-700"
       onClick={() => {
         inputElement.current?.focus();
       }}
     >
-      <div className="hidden flex-wrap items-center gap-2 group-focus-within:flex">
-        <div className="inline-block">To:</div>
+      <div className="hidden w-full flex-wrap items-center gap-2 group-focus-within:flex">
+        <div>To:</div>
         {recipients.map((value) => (
           <div
-            className="inline-flex size-fit items-center gap-1 rounded-xl border border-gray-400 px-2 py-px"
+            className="flex size-fit items-center gap-1 rounded-xl border border-gray-400 px-2 py-px"
             key={value}
           >
             {value}
@@ -50,7 +50,7 @@ export const Recipients = () => {
           }}
           ref={inputElement}
           autoFocus
-          className="inline-block w-40 grow focus:outline-0"
+          className="w-20 shrink-0 grow focus:outline-0"
         />
       </div>
       <div className="flex items-center gap-2 group-focus-within:hidden">

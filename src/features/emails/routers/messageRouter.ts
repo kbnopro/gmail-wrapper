@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
 import { getMessages } from "../utils/getMessages";
+import { sendMessage } from "../utils/sendMessage";
 import { syncMessages } from "../utils/syncMessages";
 
 export const messageRouter = createTRPCRouter({
@@ -15,6 +16,22 @@ export const messageRouter = createTRPCRouter({
       return getMessages({
         threadId: input.threadId,
         userId: ctx.session.user.id,
+      });
+    }),
+  send: protectedProcedure
+    .input(
+      z.object({
+        recipients: z.array(z.string()),
+        subject: z.string(),
+        html: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return sendMessage({
+        userId: ctx.session.user.id,
+        username: ctx.session.user.name!,
+        email: ctx.session.user.email!,
+        ...input,
       });
     }),
 });

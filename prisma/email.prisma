@@ -9,6 +9,9 @@ model Message {
   sender       String
   content      String
   owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  messageId    String
+  inReplyTo    String?
+  references   String
 
   @@index([threadId])
 }

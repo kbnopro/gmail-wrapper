@@ -53,6 +53,9 @@ export const saveMessages = async ({
             snippet: message.snippet,
             threadId: message.threadId,
             content: message.content.text ?? "",
+            messageId: message.content.messageId ?? "",
+            inReplyTo: message.content.inReplyTo,
+            references: [message.content.references ?? ""].flat().join(" "),
           };
         })
         .filter((message) => !!message),
