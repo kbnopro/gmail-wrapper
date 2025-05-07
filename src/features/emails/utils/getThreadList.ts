@@ -35,5 +35,6 @@ export const getThreadList = async ({
             content LIKE ${`%${search}%`} OR subject LIKE ${`%${search}%`}
             AND "ownerId" = ${userId}
         ) tr ON tl."threadId" = tr."threadId"
+      LIMIT ${limit} OFFSET ${offset};
   `;
 };
