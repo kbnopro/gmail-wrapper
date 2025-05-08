@@ -70,6 +70,7 @@ const Tiptap = () => {
       Underline,
       TextAlign.configure({
         types: ["heading", "paragraph"],
+        defaultAlignment: "left",
       }),
       rawHtmlComponent(rawContent),
     ],
