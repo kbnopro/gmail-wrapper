@@ -93,7 +93,6 @@ export const useEditorStore = create<StoreType>((set) => ({
       <p></p>
       At ${replyDateTime(message.internalDate)}, ${message.sender} wrote:
       <blockquote>
-      <p>abc</p>
         <react-component></react-component>
       </blockquote>
     `;
