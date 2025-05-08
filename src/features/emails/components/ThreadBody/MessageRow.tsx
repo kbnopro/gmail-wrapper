@@ -6,21 +6,8 @@ import {
 import type { Message } from "../../types";
 import { getDisplayedDate } from "../../utils/getDisplayedDate";
 import type { getMessages } from "../../utils/getMessages";
+import { parseUser } from "../../utils/parseUser";
 import { RawHtml } from "../RawHtml";
-
-const parseSender = (sender: string) => {
-  const search = /"(.*)" <(.*)>/.exec(sender);
-  if (!search) {
-    return {
-      username: sender,
-      email: undefined,
-    };
-  }
-  return {
-    username: search[1]!,
-    email: search[2]!,
-  };
-};
 
 export const MessageRow = ({
   message,
@@ -31,7 +18,7 @@ export const MessageRow = ({
   setForward: (message: Message) => void;
   setReply: (message: Message) => void;
 }) => {
-  const { username, email } = parseSender(message.sender);
+  const { username, email } = parseUser(message.sender);
   return (
     <div className="flex h-fit w-full flex-col items-center pt-5">
       <div className="flex w-full">

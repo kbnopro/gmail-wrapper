@@ -53,39 +53,42 @@ const rawHtmlComponent = (html: string) =>
 const Tiptap = () => {
   const rawContent = useEditorStore((state) => state.rawContent);
   const content = useEditorStore((state) => state.content);
-  const setContent = useEditorStore((state) => state.setContent);
-  const editor = useEditor({
-    autofocus: "start",
-    extensions: [
-      StarterKit.configure({
-        blockquote: {
-          HTMLAttributes: {
-            class: "border-l border-l-gray-200 pl-[1rem] my-1",
+  const setCurrentContent = useEditorStore((state) => state.setCurrentContent);
+  const editor = useEditor(
+    {
+      autofocus: "start",
+      extensions: [
+        StarterKit.configure({
+          blockquote: {
+            HTMLAttributes: {
+              class: "border-l border-l-gray-200 pl-[1rem] my-1",
+            },
           },
+          heading: {
+            levels: [1, 2, 3],
+          },
+        }),
+        Underline,
+        TextAlign.configure({
+          types: ["heading", "paragraph"],
+          defaultAlignment: "left",
+        }),
+        rawHtmlComponent(rawContent),
+      ],
+      enableContentCheck: true,
+      content,
+      editorProps: {
+        attributes: {
+          class: "focus:outline-0 text-sm text-gray-700 py-2",
         },
-        heading: {
-          levels: [1, 2, 3],
-        },
-      }),
-      Underline,
-      TextAlign.configure({
-        types: ["heading", "paragraph"],
-        defaultAlignment: "left",
-      }),
-      rawHtmlComponent(rawContent),
-    ],
-    enableContentCheck: true,
-    content,
-    editorProps: {
-      attributes: {
-        class: "focus:outline-0 text-sm text-gray-700 py-2",
       },
+      onUpdate: ({ editor }) => {
+        setCurrentContent(editor.getHTML());
+      },
+      immediatelyRender: false,
     },
-    onUpdate: ({ editor }) => {
-      setContent(editor.getHTML());
-    },
-    immediatelyRender: false,
-  });
+    [content],
+  );
 
   return (
     <div className="relative flex h-0 w-full grow flex-col">

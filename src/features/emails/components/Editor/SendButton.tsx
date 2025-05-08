@@ -14,7 +14,7 @@ export const SendButton = () => {
           type: editorState.type,
           subject: editorState.subject,
           recipients: editorState.recipients,
-          html: editorState.content.replace(
+          html: editorState.currentContent.replace(
             RegExp("<react-component.*", "g"),
             editorState.rawContent,
           ),

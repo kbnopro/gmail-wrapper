@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import type { Message } from "../types";
+import { parseUser } from "../utils/parseUser";
 
 const dateTimeFormater = new Intl.DateTimeFormat("en-us", {
   dateStyle: "medium",
@@ -15,6 +16,7 @@ interface StoreType {
   recipients: string[];
   subject: string;
   content: string;
+  currentContent: string;
   rawContent: string;
   replyContext?: {
     threadId: string;
@@ -28,7 +30,7 @@ interface StoreType {
   addRecipients: (email: string) => void;
   removeRecipients: (email: string) => void;
   setSubject: (subject: string) => void;
-  setContent: (content: string) => void;
+  setCurrentContent: (currentContent: string) => void;
 }
 
 export const useEditorStore = create<StoreType>((set) => ({
@@ -38,6 +40,7 @@ export const useEditorStore = create<StoreType>((set) => ({
   subject: "",
   content: "",
   rawContent: "",
+  currentContent: "",
   setNone: () => {
     set(() => ({ type: "none" }));
   },
@@ -51,6 +54,7 @@ export const useEditorStore = create<StoreType>((set) => ({
           recipients: [],
           subject: "",
           content: "",
+          currentContent: "",
           rawContent: "",
         };
       }
@@ -67,7 +71,7 @@ export const useEditorStore = create<StoreType>((set) => ({
       const content = `
       <p></p>
       <p>----------- Forwarded message ----------</p>
-      <p>From: ${message.sender}</p>
+      <p>From: ${parseUser(message.sender).username}</p>
       <p>Subject: ${message.subject}</p>
       <p>To: ${message.receiver}</p>
       <p></p>
@@ -78,6 +82,7 @@ export const useEditorStore = create<StoreType>((set) => ({
         headerSubject: subject,
         subject: subject,
         content: content,
+        currentContent: content,
         rawContent: message.body,
         recipients: [],
       };
@@ -91,7 +96,7 @@ export const useEditorStore = create<StoreType>((set) => ({
     const content = `
       <p></p>
       <p></p>
-      At ${replyDateTime(message.internalDate)}, ${message.sender} wrote:
+      <p>At ${replyDateTime(message.internalDate)}, ${parseUser(message.sender).username} wrote:</p>
       <blockquote>
         <react-component></react-component>
       </blockquote>
@@ -104,6 +109,7 @@ export const useEditorStore = create<StoreType>((set) => ({
         headerSubject: subject,
         subject: subject,
         content,
+        currentContent: content,
         rawContent: message.body,
         recipients: [message.replyTo ?? message.sender],
         replyContext: {
@@ -140,10 +146,10 @@ export const useEditorStore = create<StoreType>((set) => ({
       };
     });
   },
-  setContent(content) {
+  setCurrentContent(currentContent) {
     set(() => {
       return {
-        content,
+        currentContent,
       };
     });
   },
