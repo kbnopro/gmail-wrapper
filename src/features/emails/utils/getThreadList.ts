@@ -35,7 +35,7 @@ export const getThreadList = async ({
           SELECT DISTINCT "threadId"
           FROM "Message"
           WHERE 
-            content LIKE ${`%${search}%`} OR subject LIKE ${`%${search}%`}
+            (content LIKE ${`%${search}%`} OR subject LIKE ${`%${search}%`})
             AND "ownerId" = ${userId}
         ) tr ON tl."threadId" = tr."threadId"
       ORDER BY 
