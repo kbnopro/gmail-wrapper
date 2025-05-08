@@ -1,6 +1,7 @@
 "use client";
 
 import { mergeAttributes, Node } from "@tiptap/core";
+import Blockquote from "@tiptap/extension-blockquote";
 import { EditorContent, NodeViewWrapper, useEditor } from "@tiptap/react";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -53,7 +54,15 @@ const Tiptap = () => {
   const setContent = useEditorStore((state) => state.setContent);
   const editor = useEditor({
     autofocus: "start",
-    extensions: [StarterKit, rawHtmlComponent(rawContent)],
+    extensions: [
+      StarterKit,
+      rawHtmlComponent(rawContent),
+      Blockquote.configure({
+        HTMLAttributes: {
+          class: "border-l border-l-gray-200 pl-[1rem] my-1",
+        },
+      }),
+    ],
     enableContentCheck: true,
     content,
     editorProps: {

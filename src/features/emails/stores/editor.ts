@@ -2,6 +2,13 @@ import { create } from "zustand";
 
 import type { Message } from "../types";
 
+const dateTimeFormater = new Intl.DateTimeFormat("en-us", {
+  dateStyle: "medium",
+  timeStyle: "medium",
+});
+const replyDateTime = (date: Date) => {
+  return dateTimeFormater.format(date);
+};
 interface StoreType {
   type: "none" | "send" | "reply" | "forward";
   headerSubject: string;
@@ -9,6 +16,11 @@ interface StoreType {
   subject: string;
   content: string;
   rawContent: string;
+  replyContext?: {
+    threadId: string;
+    references: string;
+    inReplyTo: string;
+  };
   setSend: () => void;
   setNone: () => void;
   setForward: (message: Message) => void;
@@ -33,6 +45,7 @@ export const useEditorStore = create<StoreType>((set) => ({
     set((state) => {
       if (state.type != "send") {
         return {
+          ...state,
           type: "send",
           headerSubject: "New Message",
           recipients: [],
@@ -71,8 +84,35 @@ export const useEditorStore = create<StoreType>((set) => ({
     });
   },
   setReply: (message: Message) => {
-    set((state) => {
-      return {};
+    const hasPrependedSubject = ["Re: ", "Fwd: "].some((start) =>
+      message.subject.startsWith(start),
+    );
+
+    const content = `
+      <p></p>
+      <p></p>
+      At ${replyDateTime(message.internalDate)}, ${message.sender} wrote:
+      <blockquote>
+      <p>abc</p>
+        <react-component></react-component>
+      </blockquote>
+    `;
+    const indexOfCollon = message.subject.indexOf(":");
+    const subject = `Re: ${hasPrependedSubject ? message.subject.substring(indexOfCollon + 2) : message.subject}`;
+    set(() => {
+      return {
+        type: "reply",
+        headerSubject: subject,
+        subject: subject,
+        content,
+        rawContent: message.body,
+        recipients: [message.replyTo ?? message.sender],
+        replyContext: {
+          inReplyTo: message.id,
+          references: `${message.references} ${message.id}`,
+          threadId: message.threadId,
+        },
+      };
     });
   },
   addRecipients(email) {

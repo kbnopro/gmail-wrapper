@@ -25,9 +25,11 @@ const parseSender = (sender: string) => {
 export const MessageRow = ({
   message,
   setForward,
+  setReply,
 }: {
   message: Awaited<ReturnType<typeof getMessages>>[number];
   setForward: (message: Message) => void;
+  setReply: (message: Message) => void;
 }) => {
   const { username, email } = parseSender(message.sender);
   return (
@@ -51,7 +53,12 @@ export const MessageRow = ({
                 <div className="h-fit text-xs text-gray-600">
                   {getDisplayedDate(message.internalDate)}
                 </div>
-                <button className="flex rounded-full p-2 hover:bg-gray-100 focus:outline-0">
+                <button
+                  onClick={() => {
+                    setReply(message);
+                  }}
+                  className="flex rounded-full p-2 hover:bg-gray-100 focus:outline-0"
+                >
                   <ArrowTurnUpLeftIcon className="size-[18px]" />
                 </button>
                 <button

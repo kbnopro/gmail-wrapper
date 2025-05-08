@@ -10,6 +10,8 @@ export const SendButton = () => {
     <button
       onClick={() => {
         sendMessageQuery.mutate({
+          replyContext: editorState.replyContext,
+          type: editorState.type,
           subject: editorState.subject,
           recipients: editorState.recipients,
           html: editorState.content.replace(

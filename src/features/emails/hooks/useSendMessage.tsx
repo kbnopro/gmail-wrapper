@@ -6,6 +6,7 @@ export const useSendMessage = () => {
     async onSettled() {
       await utils.thread.getList.invalidate();
       await utils.thread.count.invalidate();
+      await utils.message.getAll.invalidate();
     },
   });
 };

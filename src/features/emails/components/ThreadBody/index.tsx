@@ -6,7 +6,7 @@ import { MessageRow } from "./MessageRow";
 export const ThreadBody = ({ threadId }: { threadId: string }) => {
   const [messages, messagesQuery] = useMessages(threadId);
   const setForward = useEditorStore((state) => state.setForward);
-
+  const setReply = useEditorStore((state) => state.setReply);
   if (messagesQuery.isLoading) {
     return <></>;
   }
@@ -24,6 +24,7 @@ export const ThreadBody = ({ threadId }: { threadId: string }) => {
             key={message.id}
             message={message}
             setForward={setForward}
+            setReply={setReply}
           />
         ))}
       </div>

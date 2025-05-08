@@ -21,9 +21,17 @@ export const messageRouter = createTRPCRouter({
   send: protectedProcedure
     .input(
       z.object({
+        type: z.enum(["none", "send", "reply", "forward"]),
         recipients: z.array(z.string()),
         subject: z.string(),
         html: z.string(),
+        replyContext: z
+          .object({
+            references: z.string(),
+            inReplyTo: z.string(),
+            threadId: z.string(),
+          })
+          .optional(),
       }),
     )
     .mutation(({ ctx, input }) => {

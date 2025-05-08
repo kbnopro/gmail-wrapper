@@ -23,6 +23,7 @@ export const getMessages = async ({
       references: true,
       replyTo: true,
       messageId: true,
+      threadId: true,
     },
     orderBy: {
       internalDate: "asc",
