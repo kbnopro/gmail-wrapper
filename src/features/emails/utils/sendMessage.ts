@@ -47,7 +47,6 @@ export const sendMessage = async ({
     inReplyTo: type == "reply" ? replyContext?.inReplyTo : undefined,
   }).compile();
   const rawBody = (await mailObject.build()).toString("base64");
-  console.log((await mailObject.build()).toString());
   const res = await sendGoogleMessage({
     token,
     message: {

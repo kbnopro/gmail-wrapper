@@ -5,7 +5,7 @@ import { Header } from "./Header";
 import { Recipients } from "./Recipients";
 import { SendButton } from "./SendButton";
 import { Subject } from "./Subject";
-import Tiptap from "./Tiptap";
+import Tiptap from "./TipTap";
 
 export const Editor = () => {
   const editorType = useEditorStore((state) => state.type);
@@ -19,7 +19,7 @@ export const Editor = () => {
         <Recipients />
         <Subject />
         <Tiptap />
-        <div className="flex w-full justify-end">
+        <div className="mt-2 flex h-fit w-full justify-end">
           <SendButton />
         </div>
       </div>

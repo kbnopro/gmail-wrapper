@@ -22,7 +22,7 @@ export const SendButton = () => {
         editorState.setNone();
       }}
       disabled={sendMessageQuery.isPending}
-      className="rounded-full bg-blue-700 px-5 py-2 text-white shadow-blue-900 hover:shadow-lg hover:ring-1"
+      className="rounded-full bg-blue-700 px-5 py-2 text-sm font-bold text-white shadow-blue-900 hover:shadow-lg hover:ring-1"
     >
       {sendMessageQuery.isPending ? "Sending" : "Send"}
     </button>

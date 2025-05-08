@@ -1,13 +1,15 @@
 "use client";
 
 import { mergeAttributes, Node } from "@tiptap/core";
-import Blockquote from "@tiptap/extension-blockquote";
+import TextAlign from "@tiptap/extension-text-align";
+import Underline from "@tiptap/extension-underline";
 import { EditorContent, NodeViewWrapper, useEditor } from "@tiptap/react";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
-import { useEditorStore } from "../../stores/editor";
-import { RawHtml } from "../RawHtml";
+import { useEditorStore } from "../../../stores/editor";
+import { RawHtml } from "../../RawHtml";
+import { FunctionBar } from "./FunctionBar";
 
 const rawHtmlComponent = (html: string) =>
   Node.create({
@@ -55,13 +57,21 @@ const Tiptap = () => {
   const editor = useEditor({
     autofocus: "start",
     extensions: [
-      StarterKit,
-      rawHtmlComponent(rawContent),
-      Blockquote.configure({
-        HTMLAttributes: {
-          class: "border-l border-l-gray-200 pl-[1rem] my-1",
+      StarterKit.configure({
+        blockquote: {
+          HTMLAttributes: {
+            class: "border-l border-l-gray-200 pl-[1rem] my-1",
+          },
+        },
+        heading: {
+          levels: [1, 2, 3],
         },
       }),
+      Underline,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+      rawHtmlComponent(rawContent),
     ],
     enableContentCheck: true,
     content,
@@ -77,13 +87,16 @@ const Tiptap = () => {
   });
 
   return (
-    <div
-      className="grow cursor-text overflow-auto"
-      onClick={() => {
-        editor?.commands.focus();
-      }}
-    >
-      <EditorContent editor={editor} />
+    <div className="relative flex h-0 w-full grow flex-col">
+      <div
+        className="w-full grow cursor-text overflow-auto"
+        onClick={() => {
+          editor?.commands.focus();
+        }}
+      >
+        <EditorContent editor={editor} />
+      </div>
+      <FunctionBar editor={editor} />
     </div>
   );
 };

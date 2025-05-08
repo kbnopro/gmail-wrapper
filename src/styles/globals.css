@@ -2,3 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+.tiptap {
+  h1 {
+    @apply text-2xl font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply text-xl font-semibold tracking-tight;
+  }
+
+  h3 {
+    @apply text-lg font-semibold;
+  }
+}
+
+ul {
+  @apply list-inside list-disc;
+  li > * {
+    @apply inline;
+  }
+}
+
+ol {
+  @apply list-inside list-decimal;
+  li > * {
+    @apply inline;
+  }
+}
