@@ -12,7 +12,10 @@ export const SendButton = () => {
         sendMessageQuery.mutate({
           subject: editorState.subject,
           recipients: editorState.recipients,
-          html: editorState.content,
+          html: editorState.content.replace(
+            RegExp("<react-component.*", "g"),
+            editorState.rawContent,
+          ),
         });
         editorState.setNone();
       }}

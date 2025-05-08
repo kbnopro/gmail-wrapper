@@ -20,6 +20,9 @@ export const getMessages = async ({
       receiver: true,
       internalDate: true,
       subject: true,
+      references: true,
+      replyTo: true,
+      messageId: true,
     },
     orderBy: {
       internalDate: "asc",

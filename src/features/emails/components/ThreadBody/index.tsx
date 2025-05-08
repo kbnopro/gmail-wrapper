@@ -1,9 +1,11 @@
 "use client";
 import { useMessages } from "../../hooks/useMessages";
-import { Message } from "./Message";
+import { useEditorStore } from "../../stores/editor";
+import { MessageRow } from "./MessageRow";
 
 export const ThreadBody = ({ threadId }: { threadId: string }) => {
   const [messages, messagesQuery] = useMessages(threadId);
+  const setForward = useEditorStore((state) => state.setForward);
 
   if (messagesQuery.isLoading) {
     return <></>;
@@ -18,7 +20,11 @@ export const ThreadBody = ({ threadId }: { threadId: string }) => {
       </div>
       <div className="divide-y-gray-100 flex h-fit w-full flex-col divide-y">
         {messages.map((message) => (
-          <Message key={message.id} message={message} />
+          <MessageRow
+            key={message.id}
+            message={message}
+            setForward={setForward}
+          />
         ))}
       </div>
     </div>

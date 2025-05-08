@@ -3,13 +3,13 @@ import { simpleParser } from "mailparser";
 import { db } from "@/server/db";
 
 import { putAwsObject } from "../api/putAwsObject";
-import type { Message } from "../types";
+import type { GoogleMessage } from "../types";
 
 export const saveMessages = async ({
   messages,
   userId,
 }: {
-  messages: Message[];
+  messages: GoogleMessage[];
   userId: string;
 }) => {
   const parsedMessages = await Promise.all(

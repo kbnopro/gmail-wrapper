@@ -1,6 +1,7 @@
+import type { getMessages } from "./utils/getMessages";
 import type { getThreadList } from "./utils/getThreadList";
 
-export interface Message {
+export interface GoogleMessage {
   id: string;
   threadId: string;
   internalDate: string;
@@ -10,16 +11,19 @@ export interface Message {
   error?: string;
 }
 
-export interface MessageList {
-  messages: Pick<Message, "id" | "threadId">[];
+export interface GoogleMessageList {
+  messages: Pick<GoogleMessage, "id" | "threadId">[];
   nextPageToken?: string;
   resultSizeEstimate: number;
 }
 
 export type Thread = Awaited<ReturnType<typeof getThreadList>>[number];
+
 export type DisplayedThread = Omit<Thread, "internalDate" | "content"> & {
   internalDate?: string;
 };
+
+export type Message = Awaited<ReturnType<typeof getMessages>>[number];
 
 export interface HistoryList {
   historyId: string;
@@ -27,10 +31,10 @@ export interface HistoryList {
   history?: {
     id: string;
     messagesAdded?: {
-      message: Message;
+      message: GoogleMessage;
     }[];
     messagesDeleted?: {
-      message: Message;
+      message: GoogleMessage;
     }[];
   }[];
 }

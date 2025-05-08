@@ -1,4 +1,4 @@
-import type { Message } from "../types";
+import type { GoogleMessage } from "../types";
 
 export const getGoogleMessages = async ({
   token,
@@ -63,7 +63,7 @@ export const getGoogleMessages = async ({
       if (processedText.length == 0) {
         return;
       }
-      const data = JSON.parse(processedText) as Message;
+      const data = JSON.parse(processedText) as GoogleMessage;
       if (!!data.error) {
         return;
       }

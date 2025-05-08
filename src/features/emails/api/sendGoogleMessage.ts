@@ -1,6 +1,7 @@
-import type { Message } from "../types";
+import type { GoogleMessage } from "../types";
 
-type SendMessage = Pick<Message, "raw"> & Partial<Pick<Message, "threadId">>;
+type SendMessage = Pick<GoogleMessage, "raw"> &
+  Partial<Pick<GoogleMessage, "threadId">>;
 
 export const sendGoogleMessage = async ({
   message,
@@ -26,5 +27,5 @@ export const sendGoogleMessage = async ({
     throw new Error("Error sending messages");
   }
 
-  return (await res.json()) as Message;
+  return (await res.json()) as GoogleMessage;
 };

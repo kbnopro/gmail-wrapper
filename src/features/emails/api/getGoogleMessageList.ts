@@ -1,4 +1,4 @@
-import type { MessageList } from "../types";
+import type { GoogleMessageList } from "../types";
 
 export const getGoogleMessageList = async ({
   token,
@@ -23,5 +23,5 @@ export const getGoogleMessageList = async ({
     console.error(await res.json());
     throw new Error("Error querying google thread list");
   }
-  return (await res.json()) as MessageList;
+  return (await res.json()) as GoogleMessageList;
 };

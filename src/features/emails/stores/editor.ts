@@ -1,13 +1,18 @@
 import { create } from "zustand";
 
+import type { Message } from "../types";
+
 interface StoreType {
   type: "none" | "send" | "reply" | "forward";
   headerSubject: string;
   recipients: string[];
   subject: string;
   content: string;
+  rawContent: string;
   setSend: () => void;
   setNone: () => void;
+  setForward: (message: Message) => void;
+  setReply: (message: Message) => void;
   addRecipients: (email: string) => void;
   removeRecipients: (email: string) => void;
   setSubject: (subject: string) => void;
@@ -20,6 +25,7 @@ export const useEditorStore = create<StoreType>((set) => ({
   recipients: [],
   subject: "",
   content: "",
+  rawContent: "",
   setNone: () => {
     set(() => ({ type: "none" }));
   },
@@ -32,9 +38,41 @@ export const useEditorStore = create<StoreType>((set) => ({
           recipients: [],
           subject: "",
           content: "",
+          rawContent: "",
         };
       }
       return state;
+    });
+  },
+  setForward: (message: Message) => {
+    set(() => {
+      const hasPrependedSubject = ["Re: ", "Fwd: "].some((start) =>
+        message.subject.startsWith(start),
+      );
+      const indexOfCollon = message.subject.indexOf(":");
+      const subject = `Fwd: ${hasPrependedSubject ? message.subject.substring(indexOfCollon + 2) : message.subject}`;
+      const content = `
+      <p></p>
+      <p>----------- Forwarded message ----------</p>
+      <p>From: ${message.sender}</p>
+      <p>Subject: ${message.subject}</p>
+      <p>To: ${message.receiver}</p>
+      <p></p>
+      <react-component></react-component>
+      `;
+      return {
+        type: "forward",
+        headerSubject: subject,
+        subject: subject,
+        content: content,
+        rawContent: message.body,
+        recipients: [],
+      };
+    });
+  },
+  setReply: (message: Message) => {
+    set((state) => {
+      return {};
     });
   },
   addRecipients(email) {
